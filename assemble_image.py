@@ -11,7 +11,6 @@ import random
 from multiprocessing import Pool, cpu_count, Manager
 from multiprocessing import sharedctypes
 import os.path
-import scipy.misc
 import sys
 from PIL import ImageFilter
 import itertools
