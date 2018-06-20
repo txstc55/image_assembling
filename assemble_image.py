@@ -11,7 +11,6 @@ import random
 from multiprocessing import Pool, cpu_count, Manager
 from multiprocessing import sharedctypes
 import os.path
-import scipy.misc
 import sys
 from PIL import ImageFilter
 import itertools
@@ -24,8 +23,12 @@ parser.add_option("-c", "--cut", dest="cut", default = 10,
                   help="the pixel square size you want for the output image")
 parser.add_option("-e", "--enlarge", dest="enlarge", default = 10,
                   help="how much you want to enlarge each square")
+parser.add_option("-m", "--mask", dest="mask", default = 0.25,
+                  help="a value that determines what percentage of the original value will mask the output image, min 0 max 1")
 # parser.add_option("-r", "--repeat", dest="repeat", default = False, 
 # 				  help = "if the pictures can be used repeatedly")
+
+
 
 
 (options, args) = parser.parse_args()
@@ -42,6 +45,7 @@ random.seed(926)
 image_file = args[0]
 square_size = int(options.cut)
 enlarge_size = int(options.enlarge)
+shade_value = float(options.mask)
 
 # test_output_img = "thumb.jpg"
 
@@ -249,7 +253,7 @@ def choose_image(pos):
 		origin_fragmant[:, :, 0:3] = color_value
 	# origin_fragmant = origin_fragmant//4
 	img = np.array(img.convert('RGB'))
-	img = np.uint8(0.75*img+0.25*origin_fragmant)
+	img = np.uint8((1-shade_value)*img+ shade_value*origin_fragmant)
 	img = Image.fromarray(img)
 	equalized_image = os.getcwd()+os.sep+args[1]+"_thumbnail_images"+os.sep+image_name.split(".")[0]+"_thumb_"+str(square_size*enlarge_size)+"_"+str(pos)+"."+image_name.split(".")[-1]
 	while (not os.path.isfile(equalized_image)):
