@@ -54,7 +54,7 @@ if (image_file.lower().endswith("png") or image_file.lower().endswith("jpg")):
 ```
 to adjust your need. Yes I know this is a very cheap way, I was just trying to avoid video files back then.
 
-The code will automatically evaluate the colors in the middle part (so if it is a 1920*1080 image, only the middle 108*1080 will be evaluated as the color key for the picture), later there will be support for evaluating the entire image, more reason about why I did so will be explained in assembling part.
+The code will automatically evaluate the colors in the middle part (so if it is a 1920\*1080 image, only the middle 1080\*1080 will be evaluated as the color key for the picture), later there will be support for evaluating the entire image, more reason about why I did so will be explained in assembling part.
 
 The genius part of the color evaluating part is that it does not use knn (we don't have that time), or just averaging the color (that is really cheap, but since we are dealing with real life pictures, this does not work all the time), the idea that I thought of works this way:
 1. Find all the pixel values and group them, this can be easily scquired using: ```pythonim.getcolors()``` where im is a PIL.Image object.
@@ -89,7 +89,7 @@ python assemble_image.py rick_and_morty.jpg rick_morty -o True
 The default is set to false.
 
 #### Cut
-Cut is very straight forward, how large should each cut be, the default is 10, so if you input 1920*1080 image, it will be cut to 192*108 squares.
+Cut is very straight forward, how large should each cut be, the default is 10, so if you input 1920\*1080 image, it will be cut to 192\*108 squares.
 To change the value to 5, do:
 ```bash
 python assemble_image.py rick_and_morty.jpg rick_morty -c 5
