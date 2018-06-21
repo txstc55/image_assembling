@@ -176,56 +176,60 @@ def find_pictures(image_directory):
 	return f
 
 
-
-manager = Manager()
-image_thumbnail_dictionary = manager.dict()
-
-picture_folder_name = sys.argv[1]
-current_folder = os.getcwd()
-base_folder_name = os.path.basename(picture_folder_name)
-
-data_json_file = os.path.join(current_folder+ os.sep+ "data"+ os.sep + str(base_folder_name+"_data.json"))
-
-f= find_pictures(picture_folder_name)
-# print(f)
-
-def store_thumbnails(image_file):
+def store_thumbnails(image_file, thumbnail_dictionary):
 	colors = process_images(image_file)
 	# print(colors)
 	if colors:
 		# print(colors)
 		for item in colors:
 
-			if item[0] in image_thumbnail_dictionary:
-				image_thumbnail_dictionary[item[0]]+= [image_file]
+			if item[0] in thumbnail_dictionary:
+				thumbnail_dictionary[item[0]]+= [image_file]
 			else:
-				image_thumbnail_dictionary[item[0]] = [image_file]
-		# print(image_thumbnail_dictionary)
+				thumbnail_dictionary[item[0]] = [image_file]
+
+if __name__ == "__main__":
+	manager = Manager()
+	image_thumbnail_dictionary = manager.dict()
+
+	picture_folder_name = sys.argv[1]
+	current_folder = os.getcwd()
+	base_folder_name = os.path.basename(picture_folder_name)
+
+	data_json_file = os.path.join(current_folder+ os.sep+ "data"+ os.sep + str(base_folder_name+"_data.json"))
+
+	f= find_pictures(picture_folder_name)
+	# print(f)
 
 
-pool = Pool(cpu_count())
+			# print(image_thumbnail_dictionary)
+
+
+	pool = Pool(cpu_count())
 
 
 
-print("Start multiprocessing")
-if not os.path.exists(os.path.join(current_folder+ os.sep+ "data"+ os.sep)):
-    os.makedirs(os.path.join(current_folder+ os.sep+ "data"+ os.sep))
+	print("Start multiprocessing")
+	if not os.path.exists(os.path.join(current_folder+ os.sep+ "data"+ os.sep)):
+	    os.makedirs(os.path.join(current_folder+ os.sep+ "data"+ os.sep))
 
-try:
-	pool.map(store_thumbnails, f)
-	json_dictionary = {}
-	for key in image_thumbnail_dictionary.keys():
-		json_dictionary[str(key)] = image_thumbnail_dictionary[key]
 
-	with open(data_json_file, 'w') as d:
-		json.dump(json_dictionary.copy(), d)
 
-except:
-	json_dictionary = {}
-	for key in image_thumbnail_dictionary.keys():
-		json_dictionary[str(key)] = image_thumbnail_dictionary[key]
-	with open(data_json_file, 'w') as d:
-		json.dump(json_dictionary.copy(), d)
+	try:
+		pool.starmap(store_thumbnails, [(x, image_thumbnail_dictionary) for x in f])
+		json_dictionary = {}
+		for key in image_thumbnail_dictionary.keys():
+			json_dictionary[str(key)] = image_thumbnail_dictionary[key]
+
+		with open(data_json_file, 'w') as d:
+			json.dump(json_dictionary.copy(), d)
+
+	except:
+		json_dictionary = {}
+		for key in image_thumbnail_dictionary.keys():
+			json_dictionary[str(key)] = image_thumbnail_dictionary[key]
+		with open(data_json_file, 'w') as d:
+			json.dump(json_dictionary.copy(), d)
 
 
 

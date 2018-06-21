@@ -101,7 +101,7 @@ For example, if you set enlarge to 8 by doing:
 ```bash
 python assemble_image.py rick_and_morty.jpg rick_morty -c 5 -e 8
 ```
-Then each pasted image will occupy 40*40 pixels. As a result, the output image will have a larger pixel count than the original one. The default enlarge value is set to 10.
+Then each pasted image will occupy 40\*40 pixels. As a result, the output image will have a larger pixel count than the original one. The default enlarge value is set to 10.
 
 Like I mentioned, you can always optimize the result (get a better detail) by setting a samll cut value and a fairly large enlarge value.
 
