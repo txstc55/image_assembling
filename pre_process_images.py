@@ -172,7 +172,7 @@ def find_pictures(image_directory):
 		f.extend(filenames)
 
 	base_path = os.path.basename(image_directory)
-	f = [base_path+"/"+x for x in f]
+	f = [base_path+os.sep+x for x in f]
 	return f
 
 
