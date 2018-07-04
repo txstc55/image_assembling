@@ -166,7 +166,7 @@ def find_closest_rgb(pixel_value):
 
 
 def find_brightness(brightness_value):
-	close_list = np.random.normal(0, abs(brightness_value-128)/4, 8)
+	close_list = np.random.normal(0, int(abs(brightness_value-128)/3), 8)
 	close_list = [int(round(x)) for x in close_list]
 	# print(close_list)
 
@@ -176,8 +176,9 @@ def find_brightness(brightness_value):
 	else:
 		close_list = [128-abs(int(abs(brightness_value+x))-128) for x in close_list]
 
-	close_list = [int(round(0.3*x+0.7*brightness_value)) for x in close_list]
+	# close_list = [int(round(0.8*x+0.2*brightness_value)) for x in close_list]
 	close_list = [min(brightness_dict.keys(), key = lambda y: abs(y-x)) for x in close_list]
+	# print("brightness close list: "+str(close_list))
 	return close_list
 
 # print(find_brightness(248))
