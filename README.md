@@ -34,7 +34,8 @@ This project contains two main file (may change later) and I intend for it to st
 
 If you have anaconda3, ignore those. I have tried to use PIL as much as possible since cv2 does not come with Anaconda.
 The environment is PYTHON 3.
-PLEASE RUN THOSE CODE UNDER LINUX ENVIRONMENT! I HAD PROBLEM WITH MULTIPROCESSING MODULE IN WINDOWS, WILL FIX THAT LATER BUT NOT NOW!
+
+NOW SUPPORTS WINDOWS!
 
 The functions of the two files are quite straight forward:
 preprocess_images.py pre processes a set of images (those images should be in a folder), and will create a json file that contains the color information of each image.
@@ -71,7 +72,7 @@ In the end, you will get a folder called data, and inside you will have xxx_data
 The assemble_image.py takes two mandatory inputs (in order), the image that you want to assemble, and the data that you want to use.
 For example. I have pre processed a directory called rick_morty/ that contains lots of images of rick and morty, then in data directory, you will see a file called rick_morty_data.json. To use that data to assemble an image called rick_and_morty.jpg, this is what you should input:
 ```bash
-python assemble_image.py rick_and_morty.jpg rick_morty
+python assemble_image.py -i rick_and_morty.jpg rick_morty
 ```
 Yes just like that, and you can watch your terminal flooded with information, don't worry, I left those line uncommented so that you know it is working, since the process will take fairly long.
 In the middle of processing there will be directory made to store thumbnail images, it will be gone eventually.
@@ -84,7 +85,7 @@ For overlap, if set to True (please only set them to True or False, not true or 
 Well it is not perfect (of course). However, this is something that the next to optional inputs may help.
 To enable overlap, do this:
 ```bash
-python assemble_image.py rick_and_morty.jpg rick_morty -o True
+python assemble_image.py -i rick_and_morty.jpg rick_morty -o True
 ```
 The default is set to false.
 
@@ -92,26 +93,50 @@ The default is set to false.
 Cut is very straight forward, how large should each cut be, the default is 10, so if you input 1920\*1080 image, it will be cut to 192\*108 squares.
 To change the value to 5, do:
 ```bash
-python assemble_image.py rick_and_morty.jpg rick_morty -c 5
+python assemble_image.py  rick_morty -c 5 -i rick_and_morty.jpg
 ```
 
 #### Enlarge
 Enlarge is also very straight forward, how much you want to enlarge each square for pasting. So if you have the cut set to 10, then each square will be 10 pixel by 10 pixel. When you paste the image, it will also shrink to fit that square. Of course you don't want to do that, and this is where cut jumps in.
 For example, if you set enlarge to 8 by doing:
 ```bash
-python assemble_image.py rick_and_morty.jpg rick_morty -c 5 -e 8
+python assemble_image.py -i rick_and_morty.jpg rick_morty -c 5 -e 8
 ```
 Then each pasted image will occupy 40\*40 pixels. As a result, the output image will have a larger pixel count than the original one. The default enlarge value is set to 10.
 
 Like I mentioned, you can always optimize the result (get a better detail) by setting a samll cut value and a fairly large enlarge value.
 
-The algorithm will put a mask on it (yes I know I said it was lame but I did it anyway). The origin:mask ration is 0.75:0.25, this can be changed in line 252:
-```python
-img = np.uint8(0.75*img+0.25*origin_fragmant)
+#### Mask
+A mask will apply to the output image if you want. The default value is 0.25 and the maximum value is 1. If you don't want any mask on the image, just set to 0.
+
+#### Image
+Quite easy to understand, you want the stored image to assemble another image, here you set the value to the image you want to assemble.
+
+
+## NOW COMES THE NEW FEATURE
+### Assembling text!
+![Assemble Text Example](https://github.com/txstc55/image_assembling/blob/master/RICK%20AND%20MORTY_out.jpg)
+So this is a new function that is included. You can use your photos to assemble a text of your choice. This does not require a mask value since the contrast will be quite good. 
+To generate the text in example, just input:
+```bash
+python assemble_image.py rick_morty -t "RICK AND MORTY" --wrap 5 --top 0.1 --bot 0.25 --left 0.1 --right 0.1
 ```
+And of course I will walk you through the inputs one by one (maybe a couple together).
 
-Later I will make that an optional value too.
+#### Wrap
+Defines how many texts can be in the same line, so if I set wrap to 5, only 5 characters can show up in the same line.
 
+#### top, bot, right, left
+How much margin you want each side has. The value range from 0 to 1, and top+bot<1, right+left<1, you gotta save some space for the text, which got squeezed in the middle.
+
+#### Font
+A font that is installed in your system. As long as you have font support for another language, your input text can be in another language.
+
+#### Text
+The text that you want to assemble.
+
+#### Square
+How small each square should be. Honestly just play with this value untill you find the best one, the default is 5.
 
 Alright that will be all. If you have any questions, I guess you can open an issue (I guess). Or email txstc55@gmail.com 
 
