@@ -1,3 +1,10 @@
+# Update on 06/01/20
+
+Looking back to the code from 2 years ago, I think this is complete shit. I instead opened another repo which should produce better result and the code is more readable:
+https://github.com/txstc55/ImageMosaicBVH
+
+This new repo will produce more accurate result since it is based on gradient map, and will continuously subdivide the square if the gradient is large enough.
+
 # Image assembling
 ## Use a set of images to assemble another image that you input
 
